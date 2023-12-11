@@ -57,11 +57,18 @@ const Home = ({ contacts, setContacts }: any) => {
         "." +
         values.dateOfBirth.$y +
         ".",
+      day: values.dateOfBirth.$D,
+      month: values.dateOfBirth.$M + 1,
+      year: values.dateOfBirth.$y,
       contact:
         values.contactType === "email"
           ? values.user.email
           : "+" + values.prefix + values.phone,
+      email: values.contactType === "email" ? values.user.email : "",
+      phone: values.contactType === "phone" ? values.phone : "",
+      prefix: values.contactType === "phone" ? values.prefix : "",
     };
+    console.log(values);
     setContacts([...contacts, contact]);
     form.resetFields();
     setLoading(false);

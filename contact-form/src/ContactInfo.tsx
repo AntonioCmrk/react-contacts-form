@@ -1,10 +1,33 @@
-import { Table, Modal, Input } from "antd";
+import { Table, Modal, Input, Form, DatePicker, Select, Button } from "antd";
 import { EditOutlined, DeleteOutlined } from "@ant-design/icons";
 import { useState } from "react";
 import NavigationMenu from "./NavigationMenu";
+import moment from "moment";
+const { Option } = Select;
+
+const validateMessages = {
+  required: "${label} is required!",
+  types: {
+    email: "${label} is not valid!",
+    number: "${label} is not a valid number!",
+    date: "${label} is not a valid date!",
+  },
+};
 
 const ContactInfo = ({ contacts, setContacts }: any) => {
+  const prefixSelector = (
+    <Form.Item name="prefix" noStyle>
+      <Select style={{ width: 80 }}>
+        <Option value="385">+385</Option>
+        <Option value="93">+93</Option>
+        <Option value="355">+355</Option>
+        <Option value="213">+213</Option>
+        <Option value="376">+376</Option>
+      </Select>
+    </Form.Item>
+  );
   const [isEditing, setIsEditing] = useState(false);
+  const [isEmail, setIsEmail] = useState(true);
   const [editingContact, setEditingContact] = useState<any>(null);
   const columns = [
     {
@@ -30,15 +53,15 @@ const ContactInfo = ({ contacts, setContacts }: any) => {
     {
       key: "actions",
       title: "Actions",
-      // render: (record: any) => {
-      //   <>
-      //     <EditOutlined onClick={() => onEditContact(record)} />
-      //     <DeleteOutlined
-      //       onClick={() => onDeleteContact(record)}
-      //       style={{ color: "red", marginLeft: 12 }}
-      //     />
-      //   </>;
-      // },
+      render: (record: any) => (
+        <>
+          <EditOutlined onClick={() => onEditContact(record)} />
+          <DeleteOutlined
+            onClick={() => onDeleteContact(record)}
+            style={{ color: "red", marginLeft: 12 }}
+          />
+        </>
+      ),
     },
   ];
   const onDeleteContact = (record: any) => {
@@ -56,11 +79,41 @@ const ContactInfo = ({ contacts, setContacts }: any) => {
   const onEditContact = (record: any) => {
     setIsEditing(true);
     setEditingContact({ ...record });
+    record?.contact.includes("@") ? setIsEmail(true) : setIsEmail(false);
   };
+
   const resetEditing = () => {
     setIsEditing(false);
     setEditingContact(null);
   };
+
+  function onFinish(values: any): void {
+    console.log(values);
+    setEditingContact((prev: any) => {
+      console.log("aaaaaaaaaaaa");
+      return {
+        ...prev,
+        phone: values.phone,
+        prefix: values.prefix,
+        contact: "+" + values.prefix + values.phone,
+      };
+    });
+    setContacts((prev: any) => {
+      return prev.map((contact: any) => {
+        if (contact.key === editingContact.key) {
+          return editingContact;
+        } else {
+          return contact;
+        }
+      });
+    });
+    resetEditing();
+  }
+
+  const onFinishFailed = (errorInfo: any) => {
+    console.log("Failed:", errorInfo);
+  };
+
   return (
     <div>
       <NavigationMenu />
@@ -68,33 +121,132 @@ const ContactInfo = ({ contacts, setContacts }: any) => {
       <Table dataSource={contacts} columns={columns} />
       <Modal
         title="Edit Contact"
-        visible={isEditing}
+        open={isEditing}
         okText="Save"
         onCancel={() => resetEditing()}
-        onOk={() => {
-          setContacts((prev: any) => {
-            return prev.map((contact: any) => {
-              if (contact.key === editingContact.key) {
-                return editingContact;
-              } else {
-                return contact;
-              }
-            });
-          });
-          resetEditing();
-        }}
+        onOk={onFinish}
       >
-        <Input
-          value={editingContact?.fname}
-          onChange={(e) => {
-            setEditingContact((prev: any) => {
-              return { ...prev, fname: e.target.value };
-            });
+        <Form
+          labelCol={{ span: 4 }}
+          wrapperCol={{ span: 14 }}
+          layout="horizontal"
+          style={{ maxWidth: 600 }}
+          onFinish={onFinish}
+          onFinishFailed={onFinishFailed}
+          initialValues={{
+            fname: editingContact?.fname,
+            lname: editingContact?.lname,
+            dateOfBirth: moment(
+              editingContact?.month +
+                "." +
+                editingContact?.day +
+                "." +
+                editingContact?.year
+            ),
+            email: editingContact?.email,
+            phone: editingContact?.phone,
+            prefix: editingContact?.prefix,
           }}
-        ></Input>
-        {/* <Input value={editingContact?.lname}></Input>
-        <Input value={editingContact?.dateOfBirth}></Input>
-        <Input value={editingContact?.contact}></Input> */}
+        >
+          <Form.Item
+            label="First name"
+            name="fname"
+            rules={[{ required: true, message: validateMessages.required }]}
+          >
+            <Input
+              value={editingContact?.fname}
+              placeholder="First name"
+              onChange={(e) => {
+                setEditingContact((prev: any) => {
+                  return { ...prev, fname: e.target.value };
+                });
+              }}
+            />
+          </Form.Item>
+          <Form.Item
+            label="Last name"
+            name="lname"
+            rules={[{ required: true, message: validateMessages.required }]}
+          >
+            <Input
+              placeholder="Last name"
+              onChange={(e) => {
+                setEditingContact((prev: any) => {
+                  return { ...prev, lname: e.target.value };
+                });
+              }}
+            />
+          </Form.Item>
+          <Form.Item
+            label="Date of birth"
+            name="dateOfBirth"
+            rules={[{ required: true, message: validateMessages.types.date }]}
+          >
+            <DatePicker
+              format={"DD/MM/YYYY"}
+              onChange={() => {
+                setEditingContact((prev: any) => {
+                  return { ...prev, dateOfBirth: DatePicker };
+                });
+              }}
+            />
+          </Form.Item>
+
+          <Form.Item>
+            {isEmail ? (
+              <Form.Item
+                name="email"
+                label="Email"
+                rules={[
+                  {
+                    type: "email",
+                    required: true,
+                    message: validateMessages.types.email,
+                  },
+                ]}
+              >
+                <Input
+                  placeholder="example@mail.com"
+                  onChange={(e) => {
+                    setEditingContact((prev: any) => {
+                      return { ...prev, contact: e.target.value };
+                    });
+                  }}
+                />
+              </Form.Item>
+            ) : (
+              <Form.Item
+                name="phone"
+                label="Phone Number"
+                rules={[
+                  { required: true, message: validateMessages.types.number },
+                ]}
+              >
+                <Input
+                  type="number"
+                  addonBefore={prefixSelector}
+                  style={{ width: "100%" }}
+                  placeholder="Phone number"
+                  onChange={(e) => {
+                    setEditingContact((prev: any) => {
+                      return {
+                        ...prev,
+                        phone: e.target.value,
+                        // prefix: prefix,
+                        // contact: "+" + prefix + e.target.value,
+                      };
+                    });
+                  }}
+                />
+              </Form.Item>
+            )}
+          </Form.Item>
+          <Form.Item>
+            <Button type="primary" htmlType="submit">
+              Submit
+            </Button>
+          </Form.Item>
+        </Form>
       </Modal>
     </div>
   );
