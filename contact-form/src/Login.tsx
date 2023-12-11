@@ -13,6 +13,7 @@ const Login: React.FC = () => {
   const onFinish = (values: any) => {
     console.log("Success:", values);
     if (values.username === "user" && values.password === "123") {
+      localStorage.setItem("user", values.username);
       navigate("/home");
     } else {
       alert("Username or passwoed incorrect");

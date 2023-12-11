@@ -13,6 +13,7 @@ const NavigationMenu = () => {
       <Menu
         onClick={({ key }) => {
           if (key === "signout") {
+            localStorage.removeItem("user");
             navigate("/login");
           } else {
             navigate(key);
