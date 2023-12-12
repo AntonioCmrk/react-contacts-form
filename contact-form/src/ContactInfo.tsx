@@ -89,17 +89,19 @@ const ContactInfo = ({ contacts, setContacts }: any) => {
 
   function onFinish(values: any): void {
     console.log(values);
-    // setEditingContact((prev: any) => {
-    //   return {
-    //     ...prev,
-    //     phone: values.phone,
-    //     prefix: values.prefix,
-    //     contact: "+" + values.prefix + values.phone,
-    //   };
-    // });
     setContacts((prev: any) => {
       return prev.map((contact: any) => {
         if (contact.key === editingContact.key) {
+          editingContact.fname = values.fname;
+          editingContact.lname = values.lname;
+          if (isEmail) {
+            editingContact.contact = values.email;
+          } else {
+            editingContact.contact = "+" + values.prefix + values.phone;
+            editingContact.phone = values.phone;
+            editingContact.prefix = values.prefix;
+          }
+
           return editingContact;
         } else {
           return contact;
@@ -112,7 +114,6 @@ const ContactInfo = ({ contacts, setContacts }: any) => {
   const onFinishFailed = (errorInfo: any) => {
     console.log("Failed:", errorInfo);
   };
-
   return (
     <div>
       <NavigationMenu />
@@ -121,9 +122,9 @@ const ContactInfo = ({ contacts, setContacts }: any) => {
       <Modal
         title="Edit Contact"
         open={isEditing}
-        okText="Save"
         onCancel={() => resetEditing()}
-        onOk={onFinish}
+        okButtonProps={{ style: { display: "none" } }}
+        cancelButtonProps={{ style: { display: "none" } }}
       >
         <Form
           labelCol={{ span: 4 }}
@@ -152,43 +153,21 @@ const ContactInfo = ({ contacts, setContacts }: any) => {
             name="fname"
             rules={[{ required: true, message: validateMessages.required }]}
           >
-            <Input
-              value={editingContact?.fname}
-              placeholder="First name"
-              onChange={(e) => {
-                setEditingContact((prev: any) => {
-                  return { ...prev, fname: e.target.value };
-                });
-              }}
-            />
+            <Input value={editingContact?.fname} placeholder="First name" />
           </Form.Item>
           <Form.Item
             label="Last name"
             name="lname"
             rules={[{ required: true, message: validateMessages.required }]}
           >
-            <Input
-              placeholder="Last name"
-              onChange={(e) => {
-                setEditingContact((prev: any) => {
-                  return { ...prev, lname: e.target.value };
-                });
-              }}
-            />
+            <Input placeholder="Last name" />
           </Form.Item>
           <Form.Item
             label="Date of birth"
             name="dateOfBirth"
             rules={[{ required: true, message: validateMessages.types.date }]}
           >
-            <DatePicker
-              format={"DD/MM/YYYY"}
-              onChange={() => {
-                setEditingContact((prev: any) => {
-                  return { ...prev, dateOfBirth: DatePicker };
-                });
-              }}
-            />
+            <DatePicker format={"DD/MM/YYYY"} />
           </Form.Item>
 
           <Form.Item>
@@ -204,14 +183,7 @@ const ContactInfo = ({ contacts, setContacts }: any) => {
                   },
                 ]}
               >
-                <Input
-                  placeholder="example@mail.com"
-                  onChange={(e) => {
-                    setEditingContact((prev: any) => {
-                      return { ...prev, contact: e.target.value };
-                    });
-                  }}
-                />
+                <Input placeholder="example@mail.com" />
               </Form.Item>
             ) : (
               <Form.Item
@@ -226,16 +198,6 @@ const ContactInfo = ({ contacts, setContacts }: any) => {
                   addonBefore={prefixSelector}
                   style={{ width: "100%" }}
                   placeholder="Phone number"
-                  onChange={(e) => {
-                    setEditingContact((prev: any) => {
-                      return {
-                        ...prev,
-                        phone: e.target.value,
-                        // prefix: prefix,
-                        // contact: "+" + prefix + e.target.value,
-                      };
-                    });
-                  }}
                 />
               </Form.Item>
             )}
@@ -243,6 +205,11 @@ const ContactInfo = ({ contacts, setContacts }: any) => {
           <Form.Item>
             <Button type="primary" htmlType="submit">
               Submit
+            </Button>
+          </Form.Item>
+          <Form.Item>
+            <Button type="default" onClick={() => resetEditing()}>
+              Cancel
             </Button>
           </Form.Item>
         </Form>
