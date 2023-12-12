@@ -89,15 +89,14 @@ const ContactInfo = ({ contacts, setContacts }: any) => {
 
   function onFinish(values: any): void {
     console.log(values);
-    setEditingContact((prev: any) => {
-      console.log("aaaaaaaaaaaa");
-      return {
-        ...prev,
-        phone: values.phone,
-        prefix: values.prefix,
-        contact: "+" + values.prefix + values.phone,
-      };
-    });
+    // setEditingContact((prev: any) => {
+    //   return {
+    //     ...prev,
+    //     phone: values.phone,
+    //     prefix: values.prefix,
+    //     contact: "+" + values.prefix + values.phone,
+    //   };
+    // });
     setContacts((prev: any) => {
       return prev.map((contact: any) => {
         if (contact.key === editingContact.key) {

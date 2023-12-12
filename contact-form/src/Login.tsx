@@ -11,7 +11,6 @@ const Login: React.FC = () => {
   const navigate = useNavigate();
 
   const onFinish = (values: any) => {
-    console.log("Success:", values);
     if (values.username === "user" && values.password === "123") {
       localStorage.setItem("user", values.username);
       navigate("/home");
