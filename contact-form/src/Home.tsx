@@ -51,9 +51,13 @@ const Home = ({ contacts, setContacts }: any) => {
       fname: values.fname,
       lname: values.lname,
       dateOfBirth:
-        values.dateOfBirth.$D +
+        (values.dateOfBirth.$D < 10
+          ? "0" + values.dateOfBirth.$D
+          : values.dateOfBirth.$D) +
         "." +
-        (values.dateOfBirth.$M + 1) +
+        (values.dateOfBirth.$M + 1 < 10
+          ? "0" + (values.dateOfBirth.$M + 1)
+          : values.dateOfBirth.$M + 1) +
         "." +
         values.dateOfBirth.$y +
         ".",

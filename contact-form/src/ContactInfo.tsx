@@ -1,6 +1,6 @@
 import { Table, Modal, Input, Form, DatePicker, Select, Button } from "antd";
 import { EditOutlined, DeleteOutlined } from "@ant-design/icons";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import NavigationMenu from "./NavigationMenu";
 import moment from "moment";
 const { Option } = Select;
@@ -15,6 +15,7 @@ const validateMessages = {
 };
 
 const ContactInfo = ({ contacts, setContacts }: any) => {
+  const [form] = Form.useForm();
   const prefixSelector = (
     <Form.Item name="prefix" noStyle>
       <Select style={{ width: 80 }}>
@@ -26,9 +27,11 @@ const ContactInfo = ({ contacts, setContacts }: any) => {
       </Select>
     </Form.Item>
   );
+
   const [isEditing, setIsEditing] = useState(false);
   const [isEmail, setIsEmail] = useState(true);
   const [editingContact, setEditingContact] = useState<any>(null);
+
   const columns = [
     {
       title: "First name",
@@ -55,7 +58,11 @@ const ContactInfo = ({ contacts, setContacts }: any) => {
       title: "Actions",
       render: (record: any) => (
         <>
-          <EditOutlined onClick={() => onEditContact(record)} />
+          <EditOutlined
+            onClick={() => {
+              onEditContact(record);
+            }}
+          />
           <DeleteOutlined
             onClick={() => onDeleteContact(record)}
             style={{ color: "red", marginLeft: 12 }}
@@ -64,6 +71,7 @@ const ContactInfo = ({ contacts, setContacts }: any) => {
       ),
     },
   ];
+
   const onDeleteContact = (record: any) => {
     Modal.confirm({
       title: "Are you sure you want to delete this contact?",
@@ -76,6 +84,7 @@ const ContactInfo = ({ contacts, setContacts }: any) => {
       },
     });
   };
+
   const onEditContact = (record: any) => {
     setIsEditing(true);
     setEditingContact({ ...record });
@@ -88,12 +97,37 @@ const ContactInfo = ({ contacts, setContacts }: any) => {
   };
 
   function onFinish(values: any): void {
-    console.log(values);
     setContacts((prev: any) => {
       return prev.map((contact: any) => {
         if (contact.key === editingContact.key) {
           editingContact.fname = values.fname;
           editingContact.lname = values.lname;
+          if (values.dateOfBirth?._d) {
+            editingContact.dateOfBirth = values.dateOfBirth._d
+              .toLocaleString("hr", { timeZone: "CET" })
+              .slice(0, 13)
+              .split(" ")
+              .join("");
+            editingContact.day = editingContact.dateOfBirth.slice(0, 2);
+            editingContact.month = editingContact.dateOfBirth.slice(3, 5);
+            editingContact.year = editingContact.dateOfBirth.slice(6, 10);
+          } else {
+            editingContact.dateOfBirth =
+              (values.dateOfBirth.$D < 10
+                ? "0" + values.dateOfBirth.$D
+                : values.dateOfBirth.$D) +
+              "." +
+              (values.dateOfBirth.$M + 1 < 10
+                ? "0" + (values.dateOfBirth.$M + 1)
+                : values.dateOfBirth.$M + 1) +
+              "." +
+              values.dateOfBirth.$y +
+              ".";
+            editingContact.day = values.dateOfBirth.$D;
+            editingContact.month = values.dateOfBirth.$M + 1;
+            editingContact.year = values.dateOfBirth.$y;
+          }
+
           if (isEmail) {
             editingContact.contact = values.email;
           } else {
@@ -114,6 +148,24 @@ const ContactInfo = ({ contacts, setContacts }: any) => {
   const onFinishFailed = (errorInfo: any) => {
     console.log("Failed:", errorInfo);
   };
+
+  useEffect(() => {
+    form.setFieldsValue({
+      fname: editingContact?.fname,
+      lname: editingContact?.lname,
+      dateOfBirth: moment(
+        editingContact?.month +
+          "." +
+          editingContact?.day +
+          "." +
+          editingContact?.year
+      ),
+      email: editingContact?.email,
+      phone: editingContact?.phone,
+      prefix: editingContact?.prefix,
+    });
+  }, [form, editingContact]);
+
   return (
     <div>
       <NavigationMenu />
@@ -127,26 +179,27 @@ const ContactInfo = ({ contacts, setContacts }: any) => {
         cancelButtonProps={{ style: { display: "none" } }}
       >
         <Form
+          form={form}
           labelCol={{ span: 4 }}
           wrapperCol={{ span: 14 }}
           layout="horizontal"
           style={{ maxWidth: 600 }}
           onFinish={onFinish}
           onFinishFailed={onFinishFailed}
-          initialValues={{
-            fname: editingContact?.fname,
-            lname: editingContact?.lname,
-            dateOfBirth: moment(
-              editingContact?.month +
-                "." +
-                editingContact?.day +
-                "." +
-                editingContact?.year
-            ),
-            email: editingContact?.email,
-            phone: editingContact?.phone,
-            prefix: editingContact?.prefix,
-          }}
+          // initialValues={{
+          //   fname: editingContact?.fname,
+          //   lname: editingContact?.lname,
+          //   dateOfBirth: moment(
+          //     editingContact?.month +
+          //       "." +
+          //       editingContact?.day +
+          //       "." +
+          //       editingContact?.year
+          //   ),
+          //   email: editingContact?.email,
+          //   phone: editingContact?.phone,
+          //   prefix: editingContact?.prefix,
+          // }}
         >
           <Form.Item
             label="First name"
@@ -169,7 +222,6 @@ const ContactInfo = ({ contacts, setContacts }: any) => {
           >
             <DatePicker format={"DD/MM/YYYY"} />
           </Form.Item>
-
           <Form.Item>
             {isEmail ? (
               <Form.Item
