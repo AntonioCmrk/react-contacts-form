@@ -149,28 +149,30 @@ const ContactInfo = ({ contacts, setContacts }: any) => {
     console.log("Failed:", errorInfo);
   };
 
-  useEffect(() => {
-    form.setFieldsValue({
-      fname: editingContact?.fname,
-      lname: editingContact?.lname,
-      dateOfBirth: moment(
-        editingContact?.month +
-          "." +
-          editingContact?.day +
-          "." +
-          editingContact?.year
-      ),
-      email: editingContact?.email,
-      phone: editingContact?.phone,
-      prefix: editingContact?.prefix,
-    });
-  }, [form, editingContact]);
+  form.setFieldsValue({
+    fname: editingContact?.fname,
+    lname: editingContact?.lname,
+    dateOfBirth: moment(
+      editingContact?.month +
+        "." +
+        editingContact?.day +
+        "." +
+        editingContact?.year
+    ),
+    email: editingContact?.email,
+    phone: editingContact?.phone,
+    prefix: editingContact?.prefix,
+  });
 
   return (
     <div>
       <NavigationMenu />
-      ContactInfo
-      <Table dataSource={contacts} columns={columns} />
+      <h1>ContactInfo</h1>
+      <Table
+        style={{ marginLeft: "5%", marginRight: "5%" }}
+        dataSource={contacts}
+        columns={columns}
+      />
       <Modal
         title="Edit Contact"
         open={isEditing}
@@ -182,24 +184,10 @@ const ContactInfo = ({ contacts, setContacts }: any) => {
           form={form}
           labelCol={{ span: 4 }}
           wrapperCol={{ span: 14 }}
-          layout="horizontal"
+          layout="vertical"
           style={{ maxWidth: 600 }}
           onFinish={onFinish}
           onFinishFailed={onFinishFailed}
-          // initialValues={{
-          //   fname: editingContact?.fname,
-          //   lname: editingContact?.lname,
-          //   dateOfBirth: moment(
-          //     editingContact?.month +
-          //       "." +
-          //       editingContact?.day +
-          //       "." +
-          //       editingContact?.year
-          //   ),
-          //   email: editingContact?.email,
-          //   phone: editingContact?.phone,
-          //   prefix: editingContact?.prefix,
-          // }}
         >
           <Form.Item
             label="First name"
@@ -222,38 +210,36 @@ const ContactInfo = ({ contacts, setContacts }: any) => {
           >
             <DatePicker format={"DD/MM/YYYY"} />
           </Form.Item>
-          <Form.Item>
-            {isEmail ? (
-              <Form.Item
-                name="email"
-                label="Email"
-                rules={[
-                  {
-                    type: "email",
-                    required: true,
-                    message: validateMessages.types.email,
-                  },
-                ]}
-              >
-                <Input placeholder="example@mail.com" />
-              </Form.Item>
-            ) : (
-              <Form.Item
-                name="phone"
-                label="Phone Number"
-                rules={[
-                  { required: true, message: validateMessages.types.number },
-                ]}
-              >
-                <Input
-                  type="number"
-                  addonBefore={prefixSelector}
-                  style={{ width: "100%" }}
-                  placeholder="Phone number"
-                />
-              </Form.Item>
-            )}
-          </Form.Item>
+          {isEmail ? (
+            <Form.Item
+              name="email"
+              label="Email"
+              rules={[
+                {
+                  type: "email",
+                  required: true,
+                  message: validateMessages.types.email,
+                },
+              ]}
+            >
+              <Input placeholder="example@mail.com" />
+            </Form.Item>
+          ) : (
+            <Form.Item
+              name="phone"
+              label="Phone Number"
+              rules={[
+                { required: true, message: validateMessages.types.number },
+              ]}
+            >
+              <Input
+                type="number"
+                addonBefore={prefixSelector}
+                style={{ width: "100%" }}
+                placeholder="Phone number"
+              />
+            </Form.Item>
+          )}
           <Form.Item>
             <Button type="primary" htmlType="submit">
               Submit

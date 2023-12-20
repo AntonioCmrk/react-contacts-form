@@ -11,6 +11,11 @@ const NavigationMenu = () => {
   return (
     <div>
       <Menu
+        mode="horizontal"
+        style={{
+          display: "flex",
+          justifyContent: "space-between",
+        }}
         onClick={({ key }) => {
           if (key === "signout") {
             localStorage.removeItem("user");

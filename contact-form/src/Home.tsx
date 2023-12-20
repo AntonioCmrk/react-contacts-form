@@ -83,49 +83,54 @@ const Home = ({ contacts, setContacts }: any) => {
 
   return (
     <Spin spinning={loading}>
-      <NavigationMenu />
-      <Form
-        labelCol={{ span: 4 }}
-        wrapperCol={{ span: 14 }}
-        layout="horizontal"
-        style={{ maxWidth: 600 }}
-        initialValues={{
-          contactType: contactType,
-          prefix: prefixSelector.props.children.props.children[0].props.value,
+      <h1>Contact form</h1>
+      <div
+        style={{
+          display: "flex",
+          justifyContent: "center",
+          alignItems: "center",
         }}
-        onFinish={onFinish}
-        onFinishFailed={onFinishFailed}
-        form={form}
       >
-        <Form.Item label="Contact Form"></Form.Item>
-        <Form.Item
-          label="First name"
-          name="fname"
-          rules={[{ required: true, message: validateMessages.required }]}
+        <Form
+          labelCol={{ span: 4 }}
+          wrapperCol={{ span: 14 }}
+          layout="horizontal"
+          style={{ width: "60%" }}
+          initialValues={{
+            contactType: contactType,
+            prefix: prefixSelector.props.children.props.children[0].props.value,
+          }}
+          onFinish={onFinish}
+          onFinishFailed={onFinishFailed}
+          form={form}
         >
-          <Input placeholder="First name" />
-        </Form.Item>
-        <Form.Item
-          label="Last name"
-          name="lname"
-          rules={[{ required: true, message: validateMessages.required }]}
-        >
-          <Input placeholder="Last name" />
-        </Form.Item>
-        <Form.Item
-          label="Date of birth"
-          name="dateOfBirth"
-          rules={[{ required: true, message: validateMessages.types.date }]}
-        >
-          <DatePicker format={"DD/MM/YYYY"} />
-        </Form.Item>
-        <Form.Item label="Contact Type" name="contactType">
-          <Radio.Group onChange={onChangeContactType}>
-            <Radio.Button value="phone">phone</Radio.Button>
-            <Radio.Button value="email">email</Radio.Button>
-          </Radio.Group>
-        </Form.Item>
-        <Form.Item>
+          <Form.Item
+            label="First name"
+            name="fname"
+            rules={[{ required: true, message: validateMessages.required }]}
+          >
+            <Input placeholder="First name" />
+          </Form.Item>
+          <Form.Item
+            label="Last name"
+            name="lname"
+            rules={[{ required: true, message: validateMessages.required }]}
+          >
+            <Input placeholder="Last name" />
+          </Form.Item>
+          <Form.Item
+            label="Date of birth"
+            name="dateOfBirth"
+            rules={[{ required: true, message: validateMessages.types.date }]}
+          >
+            <DatePicker format={"DD/MM/YYYY"} />
+          </Form.Item>
+          <Form.Item label="Contact Type" name="contactType">
+            <Radio.Group onChange={onChangeContactType}>
+              <Radio.Button value="phone">phone</Radio.Button>
+              <Radio.Button value="email">email</Radio.Button>
+            </Radio.Group>
+          </Form.Item>
           {contactType === "phone" ? (
             <Form.Item
               name="phone"
@@ -156,18 +161,18 @@ const Home = ({ contacts, setContacts }: any) => {
               <Input placeholder="example@mail.com" />
             </Form.Item>
           )}
-        </Form.Item>
-        <Form.Item>
-          <Button type="primary" htmlType="submit">
-            Submit
-          </Button>
-        </Form.Item>
-        <Form.Item>
-          <Button type="default" htmlType="reset">
-            Clear
-          </Button>
-        </Form.Item>
-      </Form>
+          <Form.Item>
+            <Button type="primary" htmlType="submit">
+              Submit
+            </Button>
+          </Form.Item>
+          <Form.Item>
+            <Button type="default" htmlType="reset">
+              Clear
+            </Button>
+          </Form.Item>
+        </Form>
+      </div>
     </Spin>
   );
 };
