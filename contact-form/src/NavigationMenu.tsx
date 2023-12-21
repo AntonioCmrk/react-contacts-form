@@ -5,7 +5,6 @@ import {
   PoweroffOutlined,
 } from "@ant-design/icons/lib/icons";
 import { useNavigate } from "react-router-dom";
-
 const NavigationMenu = () => {
   const navigate = useNavigate();
   return (

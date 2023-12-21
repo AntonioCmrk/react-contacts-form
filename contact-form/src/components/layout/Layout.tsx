@@ -4,7 +4,7 @@ import NavigationMenu from "../../NavigationMenu";
 const Layout = ({ children }: { children: ReactNode }) => {
   return (
     <>
-      <NavigationMenu />
+      {window.location.pathname !== "/login" && <NavigationMenu />}
       <main> {children}</main>
     </>
   );

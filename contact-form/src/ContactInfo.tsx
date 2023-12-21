@@ -1,8 +1,6 @@
 import { Table, Modal, Input, Form, DatePicker, Select, Button } from "antd";
 import { EditOutlined, DeleteOutlined } from "@ant-design/icons";
-import { useEffect, useState } from "react";
-import NavigationMenu from "./NavigationMenu";
-import moment from "moment";
+import { useState } from "react";
 const { Option } = Select;
 
 const validateMessages = {
@@ -102,31 +100,14 @@ const ContactInfo = ({ contacts, setContacts }: any) => {
         if (contact.key === editingContact.key) {
           editingContact.fname = values.fname;
           editingContact.lname = values.lname;
-          if (values.dateOfBirth?._d) {
-            editingContact.dateOfBirth = values.dateOfBirth._d
-              .toLocaleString("hr", { timeZone: "CET" })
-              .slice(0, 13)
-              .split(" ")
-              .join("");
-            editingContact.day = editingContact.dateOfBirth.slice(0, 2);
-            editingContact.month = editingContact.dateOfBirth.slice(3, 5);
-            editingContact.year = editingContact.dateOfBirth.slice(6, 10);
-          } else {
-            editingContact.dateOfBirth =
-              (values.dateOfBirth.$D < 10
-                ? "0" + values.dateOfBirth.$D
-                : values.dateOfBirth.$D) +
-              "." +
-              (values.dateOfBirth.$M + 1 < 10
-                ? "0" + (values.dateOfBirth.$M + 1)
-                : values.dateOfBirth.$M + 1) +
-              "." +
-              values.dateOfBirth.$y +
-              ".";
-            editingContact.day = values.dateOfBirth.$D;
-            editingContact.month = values.dateOfBirth.$M + 1;
-            editingContact.year = values.dateOfBirth.$y;
-          }
+          editingContact.dateOfBirthpicker = values.dateOfBirth;
+          editingContact.dateOfBirth =
+            values.dateOfBirth.$D +
+            "." +
+            (values.dateOfBirth.$M + 1) +
+            "." +
+            values.dateOfBirth.$y +
+            ".";
 
           if (isEmail) {
             editingContact.contact = values.email;
@@ -152,13 +133,7 @@ const ContactInfo = ({ contacts, setContacts }: any) => {
   form.setFieldsValue({
     fname: editingContact?.fname,
     lname: editingContact?.lname,
-    dateOfBirth: moment(
-      editingContact?.month +
-        "." +
-        editingContact?.day +
-        "." +
-        editingContact?.year
-    ),
+    dateOfBirth: editingContact?.dateOfBirthPicker,
     email: editingContact?.email,
     phone: editingContact?.phone,
     prefix: editingContact?.prefix,
@@ -166,7 +141,6 @@ const ContactInfo = ({ contacts, setContacts }: any) => {
 
   return (
     <div>
-      <NavigationMenu />
       <h1>ContactInfo</h1>
       <Table
         style={{ marginLeft: "5%", marginRight: "5%" }}
@@ -185,7 +159,7 @@ const ContactInfo = ({ contacts, setContacts }: any) => {
           labelCol={{ span: 4 }}
           wrapperCol={{ span: 14 }}
           layout="vertical"
-          style={{ maxWidth: 600 }}
+          style={{ width: "100%" }}
           onFinish={onFinish}
           onFinishFailed={onFinishFailed}
         >
@@ -193,6 +167,7 @@ const ContactInfo = ({ contacts, setContacts }: any) => {
             label="First name"
             name="fname"
             rules={[{ required: true, message: validateMessages.required }]}
+            style={{ width: "100%" }}
           >
             <Input value={editingContact?.fname} placeholder="First name" />
           </Form.Item>

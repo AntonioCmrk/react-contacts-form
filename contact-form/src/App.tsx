@@ -5,8 +5,6 @@ import Error from "./Error";
 import Login from "./Login";
 import { useState } from "react";
 import ContactInfo from "./ContactInfo";
-import Test from "./Test";
-import NavigationMenu from "./NavigationMenu";
 import PrivateRoutes from "./PrivateRoutes";
 
 function App() {

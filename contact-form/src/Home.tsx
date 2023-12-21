@@ -11,7 +11,6 @@ import {
 import { useState } from "react";
 import "./Home.css";
 import { v4 as uuidv4 } from "uuid";
-import NavigationMenu from "./NavigationMenu";
 
 const { Option } = Select;
 type ContactType = boolean | "phone" | "email";
@@ -50,20 +49,14 @@ const Home = ({ contacts, setContacts }: any) => {
       key: uuidv4(),
       fname: values.fname,
       lname: values.lname,
+      dateOfBirthPicker: values.dateOfBirth,
       dateOfBirth:
-        (values.dateOfBirth.$D < 10
-          ? "0" + values.dateOfBirth.$D
-          : values.dateOfBirth.$D) +
+        values.dateOfBirth.$D +
         "." +
-        (values.dateOfBirth.$M + 1 < 10
-          ? "0" + (values.dateOfBirth.$M + 1)
-          : values.dateOfBirth.$M + 1) +
+        (values.dateOfBirth.$M + 1) +
         "." +
         values.dateOfBirth.$y +
         ".",
-      day: values.dateOfBirth.$D,
-      month: values.dateOfBirth.$M + 1,
-      year: values.dateOfBirth.$y,
       contact:
         values.contactType === "email"
           ? values.user.email
@@ -72,7 +65,6 @@ const Home = ({ contacts, setContacts }: any) => {
       phone: values.contactType === "phone" ? values.phone : "",
       prefix: values.contactType === "phone" ? values.prefix : "",
     };
-    console.log(values);
     setContacts([...contacts, contact]);
     form.resetFields();
     setLoading(false);
