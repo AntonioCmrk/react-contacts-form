@@ -5,7 +5,7 @@ const Layout = ({ children }: { children: ReactNode }) => {
   console.log("children", children);
   return (
     <>
-      {localStorage.getItem("user") && <NavigationMenu />}
+      <NavigationMenu />
       <main> {children}</main>
     </>
   );

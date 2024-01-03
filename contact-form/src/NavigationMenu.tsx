@@ -7,7 +7,7 @@ import {
 import { useNavigate } from "react-router-dom";
 const NavigationMenu = () => {
   const navigate = useNavigate();
-  return (
+  return localStorage.getItem("user") ? (
     <div>
       <Menu
         mode="horizontal"
@@ -40,7 +40,7 @@ const NavigationMenu = () => {
         ]}
       />
     </div>
-  );
+  ) : null;
 };
 
 export default NavigationMenu;
