@@ -1,4 +1,14 @@
-import { Table, Modal, Input, Form, DatePicker, Select, Button } from "antd";
+import {
+  Table,
+  Modal,
+  Input,
+  Form,
+  DatePicker,
+  Select,
+  Button,
+  Row,
+  Col,
+} from "antd";
 import { EditOutlined, DeleteOutlined } from "@ant-design/icons";
 import { useState } from "react";
 const { Option } = Select;
@@ -142,11 +152,11 @@ const ContactInfo = ({ contacts, setContacts }: any) => {
   return (
     <div>
       <h1>ContactInfo</h1>
-      <Table
-        style={{ marginLeft: "5%", marginRight: "5%" }}
-        dataSource={contacts}
-        columns={columns}
-      />
+      <Row justify="center">
+        <Col span={20}>
+          <Table dataSource={contacts} columns={columns} />
+        </Col>
+      </Row>
       <Modal
         title="Edit Contact"
         open={isEditing}
@@ -156,75 +166,89 @@ const ContactInfo = ({ contacts, setContacts }: any) => {
       >
         <Form
           form={form}
-          labelCol={{ span: 4 }}
-          wrapperCol={{ span: 14 }}
           layout="vertical"
           style={{ width: "100%" }}
           onFinish={onFinish}
           onFinishFailed={onFinishFailed}
         >
-          <Form.Item
-            label="First name"
-            name="fname"
-            rules={[{ required: true, message: validateMessages.required }]}
-            style={{ width: "100%" }}
-          >
-            <Input value={editingContact?.fname} placeholder="First name" />
-          </Form.Item>
-          <Form.Item
-            label="Last name"
-            name="lname"
-            rules={[{ required: true, message: validateMessages.required }]}
-          >
-            <Input placeholder="Last name" />
-          </Form.Item>
-          <Form.Item
-            label="Date of birth"
-            name="dateOfBirth"
-            rules={[{ required: true, message: validateMessages.types.date }]}
-          >
-            <DatePicker format={"DD/MM/YYYY"} />
-          </Form.Item>
-          {isEmail ? (
-            <Form.Item
-              name="email"
-              label="Email"
-              rules={[
-                {
-                  type: "email",
-                  required: true,
-                  message: validateMessages.types.email,
-                },
-              ]}
-            >
-              <Input placeholder="example@mail.com" />
-            </Form.Item>
-          ) : (
-            <Form.Item
-              name="phone"
-              label="Phone Number"
-              rules={[
-                { required: true, message: validateMessages.types.number },
-              ]}
-            >
-              <Input
-                type="number"
-                addonBefore={prefixSelector}
+          <Row justify="center" gutter={[24, 12]}>
+            <Col xs={24} sm={24} md={24} lg={24} xl={24} xxl={24}>
+              <Form.Item
+                label="First name"
+                name="fname"
+                rules={[{ required: true, message: validateMessages.required }]}
                 style={{ width: "100%" }}
-                placeholder="Phone number"
-              />
-            </Form.Item>
-          )}
-          <Form.Item>
-            <Button type="primary" htmlType="submit">
-              Submit
-            </Button>
-          </Form.Item>
-          <Form.Item>
-            <Button type="default" onClick={() => resetEditing()}>
-              Cancel
-            </Button>
-          </Form.Item>
+              >
+                <Input value={editingContact?.fname} placeholder="First name" />
+              </Form.Item>
+            </Col>
+            <Col xs={24} sm={24} md={24} lg={24} xl={24} xxl={24}>
+              <Form.Item
+                label="Last name"
+                name="lname"
+                rules={[{ required: true, message: validateMessages.required }]}
+              >
+                <Input placeholder="Last name" />
+              </Form.Item>
+            </Col>
+            <Col xs={24} sm={24} md={24} lg={24} xl={24} xxl={24}>
+              <Form.Item
+                label="Date of birth"
+                name="dateOfBirth"
+                rules={[
+                  { required: true, message: validateMessages.types.date },
+                ]}
+              >
+                <DatePicker format={"DD/MM/YYYY"} />
+              </Form.Item>
+            </Col>
+            <Col xs={24} sm={24} md={24} lg={24} xl={24} xxl={24}>
+              {isEmail ? (
+                <Form.Item
+                  name="email"
+                  label="Email"
+                  rules={[
+                    {
+                      type: "email",
+                      required: true,
+                      message: validateMessages.types.email,
+                    },
+                  ]}
+                >
+                  <Input placeholder="example@mail.com" />
+                </Form.Item>
+              ) : (
+                <Form.Item
+                  name="phone"
+                  label="Phone Number"
+                  rules={[
+                    { required: true, message: validateMessages.types.number },
+                  ]}
+                >
+                  <Input
+                    type="number"
+                    addonBefore={prefixSelector}
+                    style={{ width: "100%" }}
+                    placeholder="Phone number"
+                  />
+                </Form.Item>
+              )}
+            </Col>
+            <Col xs={4} sm={4} md={4} lg={4} xl={4} xxl={4}>
+              <Form.Item>
+                <Button type="primary" htmlType="submit">
+                  Submit
+                </Button>
+              </Form.Item>
+            </Col>
+            <Col xs={4} sm={4} md={4} lg={4} xl={4} xxl={4}>
+              <Form.Item>
+                <Button type="default" onClick={() => resetEditing()}>
+                  Cancel
+                </Button>
+              </Form.Item>
+            </Col>
+          </Row>
         </Form>
       </Modal>
     </div>

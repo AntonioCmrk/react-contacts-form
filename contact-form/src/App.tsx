@@ -6,30 +6,33 @@ import Login from "./Login";
 import { useState } from "react";
 import ContactInfo from "./ContactInfo";
 import PrivateRoutes from "./PrivateRoutes";
+import Layout from "./components/layout/Layout";
 
 function App() {
   const [contacts, setContacts] = useState([]);
   return (
-    <div className="App">
-      <Routes>
-        <Route element={<PrivateRoutes />}>
-          <Route path="/" element={<Navigate to="/home" />} />
-          <Route
-            path="/home"
-            element={<Home contacts={contacts} setContacts={setContacts} />}
-          />
-          <Route
-            path="/contact-info"
-            element={
-              <ContactInfo contacts={contacts} setContacts={setContacts} />
-            }
-          />
-        </Route>
-        <Route path="/login" element={<Login />} />
+    <Layout>
+      <div className="App">
+        <Routes>
+          <Route element={<PrivateRoutes />}>
+            <Route path="/" element={<Navigate to="/home" />} />
+            <Route
+              path="/home"
+              element={<Home contacts={contacts} setContacts={setContacts} />}
+            />
+            <Route
+              path="/contact-info"
+              element={
+                <ContactInfo contacts={contacts} setContacts={setContacts} />
+              }
+            />
+          </Route>
+          <Route path="/login" element={<Login />} />
 
-        <Route path="*" element={<Error />} />
-      </Routes>
-    </div>
+          <Route path="*" element={<Error />} />
+        </Routes>
+      </div>
+    </Layout>
   );
 }
 

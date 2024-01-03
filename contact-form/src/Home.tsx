@@ -7,6 +7,8 @@ import {
   Select,
   RadioChangeEvent,
   Spin,
+  Row,
+  Col,
 } from "antd";
 import { useState } from "react";
 import "./Home.css";
@@ -76,95 +78,106 @@ const Home = ({ contacts, setContacts }: any) => {
   return (
     <Spin spinning={loading}>
       <h1>Contact form</h1>
-      <div
-        style={{
-          display: "flex",
-          justifyContent: "center",
-          alignItems: "center",
+
+      <Form
+        style={{ marginLeft: "15%", marginRight: "15%" }}
+        layout="vertical"
+        initialValues={{
+          contactType: contactType,
+          prefix: prefixSelector.props.children.props.children[0].props.value,
         }}
+        onFinish={onFinish}
+        onFinishFailed={onFinishFailed}
+        form={form}
       >
-        <Form
-          labelCol={{ span: 4 }}
-          wrapperCol={{ span: 14 }}
-          layout="horizontal"
-          style={{ width: "60%" }}
-          initialValues={{
-            contactType: contactType,
-            prefix: prefixSelector.props.children.props.children[0].props.value,
-          }}
-          onFinish={onFinish}
-          onFinishFailed={onFinishFailed}
-          form={form}
-        >
-          <Form.Item
-            label="First name"
-            name="fname"
-            rules={[{ required: true, message: validateMessages.required }]}
-          >
-            <Input placeholder="First name" />
-          </Form.Item>
-          <Form.Item
-            label="Last name"
-            name="lname"
-            rules={[{ required: true, message: validateMessages.required }]}
-          >
-            <Input placeholder="Last name" />
-          </Form.Item>
-          <Form.Item
-            label="Date of birth"
-            name="dateOfBirth"
-            rules={[{ required: true, message: validateMessages.types.date }]}
-          >
-            <DatePicker format={"DD/MM/YYYY"} />
-          </Form.Item>
-          <Form.Item label="Contact Type" name="contactType">
-            <Radio.Group onChange={onChangeContactType}>
-              <Radio.Button value="phone">phone</Radio.Button>
-              <Radio.Button value="email">email</Radio.Button>
-            </Radio.Group>
-          </Form.Item>
-          {contactType === "phone" ? (
+        <Row justify="space-evenly" gutter={[24, 12]}>
+          <Col xs={24} sm={24} md={12} lg={12} xl={12} xxl={12}>
             <Form.Item
-              name="phone"
-              label="Phone Number"
-              rules={[
-                { required: true, message: validateMessages.types.number },
-              ]}
+              label="First name"
+              name="fname"
+              rules={[{ required: true, message: validateMessages.required }]}
             >
-              <Input
-                type="number"
-                addonBefore={prefixSelector}
-                style={{ width: "100%" }}
-                placeholder="Phone number"
-              />
+              <Input placeholder="First name" />
             </Form.Item>
-          ) : (
+          </Col>
+          <Col xs={24} sm={24} md={12} lg={12} xl={12} xxl={12}>
             <Form.Item
-              name={["user", "email"]}
-              label="Email"
-              rules={[
-                {
-                  type: "email",
-                  required: true,
-                  message: validateMessages.types.email,
-                },
-              ]}
+              label="Last name"
+              name="lname"
+              rules={[{ required: true, message: validateMessages.required }]}
             >
-              <Input placeholder="example@mail.com" />
+              <Input placeholder="Last name" />
             </Form.Item>
-          )}
-          <Form.Item>
-            <Button type="primary" htmlType="submit">
-              Submit
-            </Button>
-          </Form.Item>
-          <Form.Item>
-            <Button type="default" htmlType="reset">
-              Clear
-            </Button>
-          </Form.Item>
-        </Form>
-      </div>
+          </Col>
+        </Row>
+        <Row justify="space-between" gutter={[24, 12]}>
+          <Col xs={12} sm={12} md={6} lg={6} xl={6} xxl={6}>
+            <Form.Item
+              label="Date of birth"
+              name="dateOfBirth"
+              rules={[{ required: true, message: validateMessages.types.date }]}
+            >
+              <DatePicker format={"DD/MM/YYYY"} />
+            </Form.Item>
+          </Col>
+          <Col xs={12} sm={12} md={6} lg={6} xl={6} xxl={6}>
+            <Form.Item label="Contact Type" name="contactType">
+              <Radio.Group onChange={onChangeContactType}>
+                <Radio.Button value="phone">phone</Radio.Button>
+                <Radio.Button value="email">email</Radio.Button>
+              </Radio.Group>
+            </Form.Item>
+          </Col>
+          <Col xs={24} sm={24} md={12} lg={12} xl={12} xxl={12}>
+            {contactType === "phone" ? (
+              <Form.Item
+                name="phone"
+                label="Phone Number"
+                rules={[
+                  { required: true, message: validateMessages.types.number },
+                ]}
+              >
+                <Input
+                  type="number"
+                  addonBefore={prefixSelector}
+                  style={{ width: "100%" }}
+                  placeholder="Phone number"
+                />
+              </Form.Item>
+            ) : (
+              <Form.Item
+                name={["user", "email"]}
+                label="Email"
+                rules={[
+                  {
+                    type: "email",
+                    required: true,
+                    message: validateMessages.types.email,
+                  },
+                ]}
+              >
+                <Input placeholder="example@mail.com" />
+              </Form.Item>
+            )}
+          </Col>
+        </Row>
+        <Row justify="center" gutter={[24, 12]}>
+          <Col>
+            <Form.Item>
+              <Button type="primary" htmlType="submit" style={{ width: 75 }}>
+                Submit
+              </Button>
+            </Form.Item>
+          </Col>
+          <Col>
+            <Form.Item>
+              <Button type="default" htmlType="reset" style={{ width: 75 }}>
+                Clear
+              </Button>
+            </Form.Item>
+          </Col>
+        </Row>
+      </Form>
     </Spin>
   );
 };
