@@ -199,7 +199,7 @@ const ContactInfo = ({ contacts, setContacts }: any) => {
                   { required: true, message: validateMessages.types.date },
                 ]}
               >
-                <DatePicker format={"DD/MM/YYYY"} />
+                <DatePicker format={"DD/MM/YYYY"} style={{ width: "100%" }} />
               </Form.Item>
             </Col>
             <Col xs={24} sm={24} md={24} lg={24} xl={24} xxl={24}>

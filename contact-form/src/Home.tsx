@@ -117,14 +117,21 @@ const Home = ({ contacts, setContacts }: any) => {
               name="dateOfBirth"
               rules={[{ required: true, message: validateMessages.types.date }]}
             >
-              <DatePicker format={"DD/MM/YYYY"} />
+              <DatePicker format={"DD/MM/YYYY"} style={{ width: "100%" }} />
             </Form.Item>
           </Col>
           <Col xs={12} sm={12} md={6} lg={6} xl={6} xxl={6}>
             <Form.Item label="Contact Type" name="contactType">
-              <Radio.Group onChange={onChangeContactType}>
-                <Radio.Button value="phone">phone</Radio.Button>
-                <Radio.Button value="email">email</Radio.Button>
+              <Radio.Group
+                onChange={onChangeContactType}
+                style={{ width: "100%" }}
+              >
+                <Radio.Button value="phone" style={{ width: "50%" }}>
+                  phone
+                </Radio.Button>
+                <Radio.Button value="email" style={{ width: "50%" }}>
+                  email
+                </Radio.Button>
               </Radio.Group>
             </Form.Item>
           </Col>
