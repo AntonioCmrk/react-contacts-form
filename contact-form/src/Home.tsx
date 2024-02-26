@@ -22,6 +22,7 @@ const validateMessages = {
   types: {
     email: "${label} is not valid!",
     number: "${label} is not a valid number!",
+    numberLength: "${label} is not a valid number!",
     date: "${label} is not a valid date!",
   },
 };
@@ -142,6 +143,7 @@ const Home = ({ contacts, setContacts }: any) => {
                 label="Phone Number"
                 rules={[
                   { required: true, message: validateMessages.types.number },
+                  { min: 6, message: validateMessages.types.numberLength },
                 ]}
               >
                 <Input
